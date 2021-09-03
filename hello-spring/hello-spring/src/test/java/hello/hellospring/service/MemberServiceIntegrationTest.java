@@ -1,6 +1,7 @@
 package hello.hellospring.service;
 
 import hello.hellospring.domain.Member;
+import hello.hellospring.repository.MemberRepositroy;
 import hello.hellospring.repository.MemoryMemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,14 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Transactional
+@SpringBootTest // 스프링 테스트 할 때
+@Transactional // DB에 커밋(저장)을 한 뒤 '롤백'한다. -> 지운다기 보다는 데이터를 반영하지 않음
 public class MemberServiceIntegrationTest {
 
+    // 생성자 주입을 쓰기보다는 테스트니까 걍 필드주입으로 하자..
     @Autowired MemberService memberService;
-    @Autowiredcd MemoryMemberRepository memberRepository;
-
-
+    @Autowired MemberRepositroy memberRepositroy;
 
     @Test
     public void 회원가입() throws Exception {
@@ -32,19 +32,19 @@ public class MemberServiceIntegrationTest {
         Long saveId = memberService.join(member);
 
         // then
-        Member findMember = memberRepository.findById(saveId).get();
+        Member findMember = memberRepositroy.findById(saveId).get();
         assertEquals(member.getName(), findMember.getName());
         //assertThat(member.getName()).isEqualTo(findMember.getName());
     }
 
     @Test
-    public void 중복_회원_예외() throws Exception {
+    public void 중복_회원_예외() {
         // given
         Member member1 = new Member(); //member1
-        member1.setName("spring");
+        member1.setName("hello");
 
         Member member2 = new Member(); // member2
-        member2.setName("spring");
+        member2.setName("hello");
 
         // when : test
         memberService.join(member1); // join
