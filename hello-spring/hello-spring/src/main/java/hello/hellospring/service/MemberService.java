@@ -30,9 +30,23 @@ public class MemberService {
 
     /*회원가입*/
     public Long join(Member member){
+
+        /* 메소드 (ms단위로)호출시간을 구하기 */
+        /*long start = System.currentTimeMillis();
+        try {
+            validateDuplicateMember(member); // 중복회원 검증
+            memberRepositroy.save(member);// 레파지토리에 저장
+            return member.getId(); // 회원 id 반환
+        } finally {
+            long finish = System.currentTimeMillis();
+            long timeMs = finish - start;
+            System.out.println("join = " + timeMs + "ms");
+        }*/
+
         validateDuplicateMember(member); // 중복회원 검증
         memberRepositroy.save(member);// 레파지토리에 저장
         return member.getId(); // 회원 id 반환
+
     }
 
     // 중복회원 검증 : 같은 이름의 회원은 가입 불가

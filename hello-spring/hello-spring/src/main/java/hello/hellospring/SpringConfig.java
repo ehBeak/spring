@@ -1,5 +1,6 @@
 package hello.hellospring;
 
+import hello.hellospring.aop.TimeTraceApp;
 import hello.hellospring.repository.*;
 import hello.hellospring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,26 +23,43 @@ public class SpringConfig {
         this.dataSource = dataSource;
     }*/
 
-    //@PersistenceContext
-    private EntityManager em;
+   /* //@PersistenceContext
+    private EntityManager em;*/
 
-    @Autowired
+   /* @Autowired
     public SpringConfig(EntityManager em) {
         this.em = em;
     }
+*/
+    private final MemberRepositroy memberRepositroy;
+
+    @Autowired
+    public SpringConfig(MemberRepositroy memberRepositroy) {
+        this.memberRepositroy = memberRepositroy;
+    }
+
+    /*@Bean // 함수 위에 빈 동록한 뒤 해당 객체 반환
+    public MemberService memberService() {
+        return new MemberService(memberRepositroy());
+    }*/
 
     @Bean // 함수 위에 빈 동록한 뒤 해당 객체 반환
     public MemberService memberService() {
-        return new MemberService(memberRepositroy());
+        return new MemberService(memberRepositroy);
     }
-    
-    @Bean
+
+    /*@Bean
+    public TimeTraceApp timeTraceApp() {
+        return new TimeTraceApp();
+    }*/
+   /* @Bean
     public MemberRepositroy memberRepositroy() {
 
         //return new MemoryMemberRepository(); // memeory
         //return new JdbcMemberRepository(dataSource); //jdbc
         //return new JdbcTemplateMemberRepository(dataSource); // jdbcTemplate
+        //return new JpaMemberRepository(em);
 
-        return new JpaMemberRepository(em);
-    }
+
+    }*/
 }
