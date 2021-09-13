@@ -48,7 +48,7 @@ class MemoryMemberRepositoryTest {
         repositroy.save(member1);
 
         Member member2 = new Member(); // member2
-        member1.setName("spring2");
+        member1.setName("spring1");
         repositroy.save(member2);
 
         // when : findByName()실행 -> test

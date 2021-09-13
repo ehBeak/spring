@@ -38,9 +38,11 @@ public class JdbcTemplateMemberRepository implements MemberRepositroy {
     }
     @Override
     public Optional<Member> findByName(String name) {
-        List<Member> result = jdbcTemplate.query("select * from member where name = ?", memberRowMapper(), name);
+        List<Member> result = jdbcTemplate.query("select * from member where  name = ?", memberRowMapper(), name);
         return result.stream().findAny();
     }
+
+    /* 함수 인터페이스 */
     private RowMapper<Member> memberRowMapper() {
         return (rs, rowNum) -> {
             Member member = new Member();

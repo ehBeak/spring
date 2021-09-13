@@ -5,11 +5,13 @@ import hello.hellospring.repository.MemberRepositroy;
 import hello.hellospring.repository.MemoryMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 //@Service // 원래는 순수 자바코드였지만 service어노테이션으로 스프링 컨테이너에 등록
+@Transactional
 public class MemberService {
 
     // 멤버 저장소 객체
