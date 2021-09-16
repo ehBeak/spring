@@ -13,48 +13,47 @@ public class jpaMain {
 
          EntityManager em = emf.createEntityManager();
 
-         // 트랜잭션 설정
+         // 트랜잭션 설정 : DB에 접근할 때 트랜잭션 내부에서 해야함.
          EntityTransaction tx = em.getTransaction();
          tx.begin();
 
          try {
+             /*Member member1 = new Member(150L,"A");
+             Member member2 = new Member(160L,"B");
 
-             /*1.
-             //삭제
-             Member findMember = em.find(Member.class, 1L);
-             em.remove(findMember);*/
+             em.persist(member1);
+             em.persist(member2);
+             System.out.println("==========");*/
 
-             /*2.
-             //조회
-             Member findmember = em.find(Member.class, 1L);
-             System.out.println("findMember.id = "+findmember.getId());
-             System.out.println("findMember.name = "+findmember.getName());*/
+             Member member = em.find(Member.class, 150L);
+             member.setName("ZZZZZ");
 
-             /*3.
-             //삽입
-             // 생성, 설정
+
+             /*// 영속 (같은 트랜젝션에서 적용)
+             Member findMember1 = em.find(Member.class, 101L); // 쿼리를 DB에서 가져와야 한다.
+                                                                    // => 1차 캐시에 없으니까
+             Member findMember2 = em.find(Member.class, 101L); // 쿼리를 DB에서 가져오면 안된다.
+                                                                    // => 1차 캐시에 있으니까
+             System.out.println("result = " + (findMember1 == findMember2));
+             // collection으로 보기. => 1차 캐시로 반복 가능한 읽기*/
+
+            /* // 비영속
              Member member = new Member();
-             member.setId(1L);
-             member.setName("helloA");
+             member.setId(101L);
+             member.setName("HelloJPA");
 
-             em.persist(member);// 삽입*/
+             //영속
+             System.out.println("=== BEFORE ===");
+             em.persist(member); // 쿼리 날리지 않음 => 1차 캐시에서 저장
+             System.out.println("=== AFTER ===");
 
-             /*4.
-             // 수정
-             Member findmember = em.find(Member.class, 1L);
-             findmember.setName("HelloJPA"); // persist필요 없음!*/
-
-             /* 나이가 18살인 모든 회원을 검색하고 있다면? -> JPQL: 객체 지향 쿼리 언어 */
-             // 객체를 대상으로한 쿼리
-             // m = Member Entity
-             List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
-
-             for(Member member : result) {
-                 System.out.println("member.name = " + member.getName());
-             }
+             // 조회
+             Member findMember = em.find(Member.class, 101L); // 쿼리 날리지 않음 => 1차 캐시 에서 조회
+             System.out.println("findMember.id = " + findMember.getId());
+             System.out.println("findMember.name = " + findMember.getName());*/
 
 
-             tx.commit(); // DB저장
+             tx.commit(); // DB저장 (flush, commit) => 버퍼링이라는 이점
          } catch (Exception e) {
              tx.rollback(); // 롤백
          } finally {
