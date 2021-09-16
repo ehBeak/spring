@@ -18,42 +18,29 @@ public class jpaMain {
          tx.begin();
 
          try {
-             /*Member member1 = new Member(150L,"A");
-             Member member2 = new Member(160L,"B");
+            /*// 영속
+             Member member = new Member(200L, "member200");
+             em.persist(member); // 트랜잭션에 커밋되기 전까지는 DB에 쿼리 날릴 수가 없다.
 
-             em.persist(member1);
-             em.persist(member2);
-             System.out.println("==========");*/
+             // 미리 DB에 반영을 하고 싶다면..
+             em.flush();
 
+             System.out.println("============================");*/
+
+             // 영속
              Member member = em.find(Member.class, 150L);
-             member.setName("ZZZZZ");
+             member.setName("AAAAA"); // 더티 체킹
 
+             // 준영속 상태
+             em.detach(member); // 영속 컨택스트에서 분리시킴 => member와 관련된 모든 것들이 빠짐
+             em.clear(); // em과 대응되는 영속성 컨텍스트를 모두 제거
+             em.clear(); // 영속성 컨텍스트 종료, em을 종료하니까..
 
-             /*// 영속 (같은 트랜젝션에서 적용)
-             Member findMember1 = em.find(Member.class, 101L); // 쿼리를 DB에서 가져와야 한다.
-                                                                    // => 1차 캐시에 없으니까
-             Member findMember2 = em.find(Member.class, 101L); // 쿼리를 DB에서 가져오면 안된다.
-                                                                    // => 1차 캐시에 있으니까
-             System.out.println("result = " + (findMember1 == findMember2));
-             // collection으로 보기. => 1차 캐시로 반복 가능한 읽기*/
-
-            /* // 비영속
-             Member member = new Member();
-             member.setId(101L);
-             member.setName("HelloJPA");
-
-             //영속
-             System.out.println("=== BEFORE ===");
-             em.persist(member); // 쿼리 날리지 않음 => 1차 캐시에서 저장
-             System.out.println("=== AFTER ===");
-
-             // 조회
-             Member findMember = em.find(Member.class, 101L); // 쿼리 날리지 않음 => 1차 캐시 에서 조회
-             System.out.println("findMember.id = " + findMember.getId());
-             System.out.println("findMember.name = " + findMember.getName());*/
 
 
              tx.commit(); // DB저장 (flush, commit) => 버퍼링이라는 이점
+
+
          } catch (Exception e) {
              tx.rollback(); // 롤백
          } finally {
