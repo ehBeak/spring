@@ -27,14 +27,14 @@ public class jpaMain {
 
              System.out.println("============================");*/
 
-             // 영속
+             /*// 영속
              Member member = em.find(Member.class, 150L);
              member.setName("AAAAA"); // 더티 체킹
 
              // 준영속 상태
              em.detach(member); // 영속 컨택스트에서 분리시킴 => member와 관련된 모든 것들이 빠짐
              em.clear(); // em과 대응되는 영속성 컨텍스트를 모두 제거
-             em.clear(); // 영속성 컨텍스트 종료, em을 종료하니까..
+             em.close(); // 영속성 컨텍스트 종료, em을 종료하니까..*/
 
 
 
