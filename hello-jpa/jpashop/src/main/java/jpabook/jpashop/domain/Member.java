@@ -1,9 +1,6 @@
 package jpabook.jpashop.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Member {
@@ -14,8 +11,12 @@ public class Member {
     @Column(name = "USERNAME")
     private String username;
 
-    @Column(name = "TEAM_ID") // 왜래키를 일대일로 DB와 맞춤
-    private Long teamId;
+    /*@Column(name = "TEAM_ID") // 왜래키를 일대일로 DB와 맞춤
+    private Long teamId;*/
+
+    @ManyToOne // Member가 N인 곳에 ManyToOne
+    @JoinColumn(name = "TEAM_ID") // name = "왜래키에 해당하는 컬럼명"
+    private Team team;
 
     public Long getId() {
         return id;
@@ -33,11 +34,11 @@ public class Member {
         this.username = username;
     }
 
-    public Long getTeamId() {
-        return teamId;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setTeamId(Long teamId) {
-        this.teamId = teamId;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
