@@ -1,22 +1,23 @@
 package jpabook.jpashop.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Table(name = "MEMBER")
 public class Member {
-
     @Id @GeneratedValue
+    @Column(name = "MEMBER_ID")
     private Long id;
 
-    @Column(name = "USERNAME")
-    private String username;
+    private String name;
+    private String city;
+    private String street;
+    private String zipcode;
 
-    /*@Column(name = "TEAM_ID") // 왜래키를 일대일로 DB와 맞춤
-    private Long teamId;*/
-
-    @ManyToOne // Member가 N인 곳에 ManyToOne
-    @JoinColumn(name = "TEAM_ID") // name = "왜래키에 해당하는 컬럼명"
-    private Team team;
+    @OneToMany(mappedBy = "member") // mappedBy = "연관관계의 주인인 변수명"
+    private List<Order> orders = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -26,29 +27,37 @@ public class Member {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Team getTeam() {
-        return team;
+    public String getCity() {
+        return city;
     }
 
-    public void ChangeTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this); // 순수 객체 상태를 고려해서 항상 양쪽에 값 설정 => 연관관계 편의 메소드
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", team=" + team +
-                '}';
+    public String getStreet() {
+        return street;
     }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+
 }
