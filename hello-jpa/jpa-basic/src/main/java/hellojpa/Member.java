@@ -3,30 +3,54 @@ package hellojpa;
 import javax.persistence.*;
 import java.util.Date;
 
-//@Table(name="USERNAME")
 @Entity
 public class Member {
 
-    @Id // pk
+    @Id @GeneratedValue
+    @Column(name = "MEMBER_ID")
     private Long id;
 
-    @Column(name = "name") // username ~ name
+    @Column(name = "USERNAME")
     private String username;
 
-    private Integer age;
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
+    private Team team;
 
-    @Enumerated(EnumType.STRING) // 객체의 enum타입 => ORDINAL타입 사용 X
-    private RoleType roleType;
-    //=> 중간에 enum타입을 추가하면 순서로 하기 때문에 값의 중복이 일어남
-    @Temporal(TemporalType.TIMESTAMP)// 날짜 타입
-    private Date createdDate;
+    // 단방향
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
+    public Long getId() {
+        return id;
+    }
 
-    @Lob
-    private String description;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Member() {
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public Locker getLocker() {
+        return locker;
+    }
+
+    public void setLocker(Locker locker) {
+        this.locker = locker;
     }
 }
