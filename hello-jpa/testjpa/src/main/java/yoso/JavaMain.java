@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,24 +22,32 @@ public class JavaMain {
 
         try {
 
-            /* insert 하기 */
+/*
+             insert 하기
+*/
 
             // ingredient 3개(H)로.
+
             Ingredient ingre1 = new Ingredient();
             ingre1.setName("aaa");
             ingre1.setType("H");
             em.persist(ingre1);
+            System.out.println("===========ingre1===========");
 
             Ingredient ingre2 = new Ingredient();
             ingre2.setName("bbb");
             ingre2.setType("H");
             em.persist(ingre2);
 
+            System.out.println("===========ingre2===========");
+
 
             Ingredient ingre3 = new Ingredient();
             ingre3.setName("ccc");
             ingre3.setType("H");
             em.persist(ingre3);
+
+            System.out.println("===========ingre3===========");
 
             System.out.println("========================");
 
@@ -80,22 +89,32 @@ public class JavaMain {
             em.persist(ingreGhs3);
 
 
-            /* 조회 */
-            /* ingre1의 ghs등급을 출력*/
+            /* 조회
+             ingre1의 ghs등급을 출력
 
-            /*
              * 1. 받은 성분이 h인지 아닌지 확인한다.
              * 2. h이면 join을 해서 h의 몇등급인지 확인한다.*/
 
-            if(ingre1.getType() == "H") {
+            em.flush();
+            em.clear();
 
-                IngreGhs findIngreGhs = em.find(IngreGhs.class, ingre1.getId());
+            Ingredient findIngre = em.find(Ingredient.class, ingre1.getId());
 
-                System.out.println("ingre1이 가진 ghs등급 ID: " + findIngreGhs.getGhs());
+            List<IngreGhs> findingreGhsList = findIngre.getIngreGhsList();
 
-            } else {
-                System.out.println("TYPE: " + "F");
+            for (IngreGhs ingreghs :
+                    findingreGhsList) {
+                System.out.println("ghs분류: " + ingreghs.getGhs().getCategory());
+                System.out.println("ghs등급: " + ingreghs.getGhs().getGhsClass());
             }
+
+            /*Member findMember = em.find(Member.class, member.getId());
+            List<Member> members = findMember.getTeam().getMembers();
+
+            for (Member m :
+                    members) {
+                System.out.println("m = " + m.getUsername());
+            }*/
 
             tx.commit();
         } catch (Exception e) {

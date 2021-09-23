@@ -16,7 +16,7 @@ public class Ingredient {
     private String type;
 
     @OneToMany(mappedBy = "ingredient")
-    private List<IngreGhs> ingreGhses = new ArrayList<>();
+    private List<IngreGhs> ingreGhsList = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -40,5 +40,13 @@ public class Ingredient {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<IngreGhs> getIngreGhsList() {
+        return ingreGhsList;
+    }
+
+    public void setIngreGhsList(List<IngreGhs> ingreGhsList) {
+        this.ingreGhsList = ingreGhsList;
     }
 }
