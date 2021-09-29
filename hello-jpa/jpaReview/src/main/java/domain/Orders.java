@@ -14,7 +14,8 @@ public class Orders {
     @Column(name = "ORDER_ID")
     private Long id;
 
-    @ManyToOne
+    // # 연관관계 주인에 꼭 값을 넣기(List에 넣는 것이 아님)
+    @ManyToOne // 외래키가 있는 곳(N)으로 연관관계 주인을 하기
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
@@ -24,7 +25,8 @@ public class Orders {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "orders")
+    // 후에 setOrderItems(a)라도 해도 DB에 적용되지 않음
+    @OneToMany(mappedBy = "orders") // mappedBy는 읽기전용만 가능
     private List<OrderItem> orderItems = new ArrayList<>();
 
     public Long getId() {
@@ -39,8 +41,9 @@ public class Orders {
         return member;
     }
 
-    public void setMember(Member member) {
+    public void changeOrder(Member member) {
         this.member = member;
+        member.getOrders().add(this); // #연관관계 편의 메소드
     }
 
     public LocalDateTime getOrderDate() {
