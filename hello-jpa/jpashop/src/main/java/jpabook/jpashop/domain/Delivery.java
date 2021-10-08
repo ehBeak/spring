@@ -1,32 +1,24 @@
 package jpabook.jpashop.domain;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "MEMBER")
-public class Member {
+@Table(name = "DELIVERY")
+public class Delivery {
+
     @Id @GeneratedValue
-    @Column(name = "MEMBER_ID")
+    @Column(name = "DELIVERY_ID")
     private Long id;
 
-    private String name;
+    @OneToOne(mappedBy = "delivery") // 여기는 fk 없으니까 mappedBy
+    private Order order;
+
     private String city;
     private String street;
     private String zipcode;
 
-    @OneToMany(mappedBy = "member") // mappedBy = "연관관계의 주인인 변수명"
-    private List<Order> orders = new ArrayList<>();
-
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status;
 
     public Long getId() {
         return id;
@@ -36,12 +28,12 @@ public class Member {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public String getCity() {
@@ -68,5 +60,11 @@ public class Member {
         this.zipcode = zipcode;
     }
 
+    public DeliveryStatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(DeliveryStatus status) {
+        this.status = status;
+    }
 }

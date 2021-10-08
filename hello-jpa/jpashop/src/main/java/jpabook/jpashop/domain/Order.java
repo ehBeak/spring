@@ -19,6 +19,7 @@ public class Order {
     @JoinColumn(name = "MEMBER_ID") // name = 조인할 컬럼명
     private Member member;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
@@ -26,6 +27,28 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "DELIVERY_ID") // fk있는 컬럼에 joincolumn
+    private Delivery delivery;
+
+
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
 
     public Long getId() {
         return id;
