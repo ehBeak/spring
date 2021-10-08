@@ -15,6 +15,7 @@ public class Product {
     /*@ManyToMany(mappedBy = "products")
     private List<Member> members;*/
 
+    // 다대다 -> 일대다 일대다
     @OneToMany(mappedBy = "products")
     private List<MemberProduct> memberProducts = new ArrayList<>();
 

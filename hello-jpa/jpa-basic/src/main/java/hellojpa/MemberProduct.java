@@ -10,6 +10,7 @@ public class MemberProduct {
     @Id @GeneratedValue
     private Long id;
 
+    // 다대다 -> 일대다, 일대다
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;

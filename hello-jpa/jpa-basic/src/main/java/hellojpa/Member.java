@@ -28,7 +28,7 @@ public class Member {
     @JoinColumn(name = "MEMBER_PRODUCT")
     private List<Product> products = new ArrayList<>();*/
 
-    // 다대다 -> 일대다
+    // 다대다 -> 일대다 + 일대다
     @OneToMany(mappedBy = "Member")
     private List<MemberProduct> memberProducts = new ArrayList<>();
 
