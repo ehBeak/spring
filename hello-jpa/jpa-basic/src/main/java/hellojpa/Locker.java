@@ -13,7 +13,7 @@ public class Locker {
 
     private String name;
 
-    // 양방향
+    // * 일대일 -> 양방향, 읽기전용
     @OneToOne(mappedBy = "locker")
     private Member member;
 }

@@ -19,7 +19,7 @@ public class Member {
     @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
     private Team team;
 
-    // 단방향
+    // * 일대일 단방향
     @OneToOne
     @JoinColumn(name = "LOCKER_ID")
     private Locker locker;
