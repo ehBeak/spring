@@ -6,7 +6,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "ITEM")
-public class Item {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // 단일 테이블로
+@DiscriminatorColumn
+public abstract class Item extends BaseEntity{ // item을 단독으로 저장할 일이 없으면 추상 클래스로
 
     @Id @GeneratedValue
     @Column(name = "ITEM_ID")
