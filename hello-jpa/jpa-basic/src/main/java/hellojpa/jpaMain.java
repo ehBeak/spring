@@ -30,9 +30,10 @@ public class jpaMain {
              em.flush();
              em.close();
 
-             //검색시 movie를 부모클래스와 join을 한 뒤 가져옴
-             Movie findMovie = em.find(Movie.class,movie.getId());
-             System.out.println("findMovie = " + findMovie);
+             // Item으로 객체를 찾을시, union all로 모든 테이블을 다 뒤진다. : 복잡한 쿼리 생성
+             Item item = em.find(Movie.class,movie.getId());
+             System.out.println("findMovie = " + item);
+
 
 
              tx.commit(); // DB저장 (flush, commit) => 버퍼링이라는 이점
