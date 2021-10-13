@@ -18,6 +18,21 @@ public class jpaMain {
          tx.begin();
 
          try {
+             // movie 등록 : item테이블에 insert 쿼리, movie테이블에 insert쿼리가 각각 나간다.
+             Movie movie = new Movie();
+             movie.setDirector("aaaa");
+             movie.setActor("bbbb");
+             movie.setName("바람과 함께 사라지다");
+             movie.setPrice(10000);
+
+             em.persist(movie);
+
+             em.flush();
+             em.close();
+
+             //검색시 movie를 부모클래스와 join을 한 뒤 가져옴
+             Movie findMovie = em.find(Movie.class,movie.getId());
+             System.out.println("findMovie = " + findMovie);
 
 
              tx.commit(); // DB저장 (flush, commit) => 버퍼링이라는 이점
