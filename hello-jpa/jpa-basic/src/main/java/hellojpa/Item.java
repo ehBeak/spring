@@ -10,7 +10,9 @@ import javax.persistence.*;
  *  3. TABLE_PER_CLASS : 각각 테이블 생성 전략
  *
  * DTYPE : item을 상속한 entity명이 DTYPE 값에 들어감
- *  -> 각각의 entity는 @DiscriminateValue로 열에 들어갈 entity명을 바꿀 수 있음*/
+ *  -> 각각의 entity는 @DiscriminateValue로 열에 들어갈 entity명을 바꿀 수 있음
+ *  -> single table전략에서는 DTYPE 적용해야함(구분해야 하니까)
+ *      ==> 여기서는 @DiscriminatorColumn이 없어도 적용된다.*/
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED) // 부모클래스에 조인 전략 명시
