@@ -16,7 +16,7 @@ public class jpaMain {
          tx.begin();
 
          try {
-             /* 지연로딩 */
+             /* 즉시로딩 */
              Team team = new Team();
              team.setName("teamA");
              em.persist(team);
@@ -31,12 +31,10 @@ public class jpaMain {
              em.clear();
 
              Member findMember = em.find(Member.class, member.getId());
-             System.out.println("findMember: " + member.getTeam().getClass()); // 프록시 타입으로 나옴!
-             // Member만 조회했으니까 Member만 조회됨(fetchType.LAZY)
+             System.out.println("findMember: " + member.getTeam().getClass()); // 프록시랑 관련 없음, 안나옴
+             // 한번에 같이 조인해서 실제 엔티티를 가져옴 (fetchType.EAGER)
 
-             findMember.getTeam().getName(); // Team에 무언가 터치를 했을 때만 쿼리가 나감
-
-
+             findMember.getTeam().getName(); // : 이전에 초기화 끝
 
              tx.commit();
              // DB저장 (flush, commit) => 버퍼링이라는 이점
