@@ -23,7 +23,7 @@ public class Category extends BaseEntity{
 
     /* 셀프로 매핑 가능 */
     //  자식(현재 구현 클래스) 입장에서 부모가 하나..?
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
     private Category parent;
 

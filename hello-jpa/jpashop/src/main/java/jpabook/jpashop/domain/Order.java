@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
 @Table(name = "ORDERS")
 public class Order {
@@ -15,7 +17,7 @@ public class Order {
     @Column(name = "ORDER_ID")
     private Long id;
 
-    @ManyToOne // Member에서 OnToMany로 양방향 설정하면 collection쓰자, 가급적으로는 단방향.
+    @ManyToOne(fetch = FetchType.LAZY) // Member에서 OnToMany로 양방향 설정하면 collection쓰자, 가급적으로는 단방향.
     @JoinColumn(name = "MEMBER_ID") // name = 조인할 컬럼명
     private Member member;
 
@@ -25,10 +27,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = ALL)
     @JoinColumn(name = "DELIVERY_ID") // fk있는 컬럼에 joincolumn
     private Delivery delivery;
 
