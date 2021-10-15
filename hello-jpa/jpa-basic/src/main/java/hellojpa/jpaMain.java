@@ -16,25 +16,22 @@ public class jpaMain {
          tx.begin();
 
          try {
-             /* 즉시로딩 */
-             Team team = new Team();
-             team.setName("teamA");
-             em.persist(team);
+             /* 영속성 전이: CASCADE */
 
-             Member member = new Member();
-             member.setUsername("m");
-             member.setTeam(team);
 
-             em.persist(member);
+             Child child1 = new Child();
+             Child child2 = new Child();
 
-             em.flush();
-             em.clear();
+             Parent parent = new Parent();
+             parent.addChild(child1);
+             parent.addChild(child2);
 
-             Member findMember = em.find(Member.class, member.getId());
-             System.out.println("findMember: " + member.getTeam().getClass()); // 프록시랑 관련 없음, 안나옴
-             // 한번에 같이 조인해서 실제 엔티티를 가져옴 (fetchType.EAGER)
+             /*em.persist(parent);
+             em.persist(child1);
+             em.persist(child2);*/
+             // 이렇게 해야함 -> 좀 귀찮아.
 
-             findMember.getTeam().getName(); // : 이전에 초기화 끝
+             /* Parent 가 child를 관리해줬으면 좋겠음 -> 이때 쓰는 것을 cascade라고 함  */
 
              tx.commit();
              // DB저장 (flush, commit) => 버퍼링이라는 이점
