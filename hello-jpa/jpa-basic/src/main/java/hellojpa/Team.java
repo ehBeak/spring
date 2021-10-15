@@ -12,6 +12,15 @@ public class Team extends BaseEntity { //
     private Long id;
 
     private Member member;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @OneToMany
     @JoinColumn(name = "TEAM_ID")

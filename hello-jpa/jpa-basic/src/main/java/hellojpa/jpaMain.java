@@ -16,35 +16,26 @@ public class jpaMain {
          tx.begin();
 
          try {
-             // em.find() VS em.getReference()
+             /* 지연로딩 */
+             Team team = new Team();
+             team.setName("teamA");
+             em.persist(team);
+
              Member member = new Member();
-             member.setUsername("hello");
+             member.setUsername("m");
+             member.setTeam(team);
 
              em.persist(member);
 
-             em.flush(); // DB 쿼리 날아감
-             em.clear(); // 영속성 컨텍스트 완전히 깨끗하게 -> 처음 어플리케이션 실행한 것 처럼
+             em.flush();
+             em.clear();
 
-             // find() -> 한번에 조인을 해서 조회용 쿼리를 날림
              Member findMember = em.find(Member.class, member.getId());
-             System.out.println("userid: " + findMember.getId());
-             System.out.println("username: " + findMember.getUsername());
+             System.out.println("findMember: " + member.getTeam().getClass()); // 프록시 타입으로 나옴!
+             // Member만 조회했으니까 Member만 조회됨(fetchType.LAZY)
 
-             // getReference() -> getReference만으로 쿼리가 나가는 것 아님
-             Member findMember2 = em.getReference(Member.class, member.getId());
-             System.out.println("findMember2 = " + findMember2.getClass());
-             // -> 출력 내용 hibernateProxy ~~ : hibernate가 만든 가짜 클래스 = 프록시 클래스스
-             System.out.println("userid: " + findMember2.getId()); // 쿼리 안나감
-             System.out.println("username: " + findMember2.getUsername()); // username은 DB에 있으니까 쿼리 나감
-             // -> JPA가 실제 어떤 값이 필요할 때 DB에 쿼리가 나감(현재는 getUsername())
+             findMember.getTeam().getName(); // Team에 무언가 터치를 했을 때만 쿼리가 나감
 
-             /* find()와 getReference의 반환 클래스 타입은 다르다. ==이 아니라 instance of*/
-
-
-             /* 준영속 상태에서 프로시 초기화 하면 문제 발생 */
-             Member m1 = em.getReference(Member.class, member.getId());
-             em.detach(m1); // 준영속
-             m1.getUsername(); // 여기서 em이 초기화 해야하는데 못하니까 예외 발생
 
 
              tx.commit();
