@@ -26,12 +26,18 @@ public class jpaMain {
              parent.addChild(child1);
              parent.addChild(child2);
 
-             /*em.persist(parent);
-             em.persist(child1);
+             em.persist(parent);
+             /*em.persist(child1);
              em.persist(child2);*/
              // 이렇게 해야함 -> 좀 귀찮아.
 
              /* Parent 가 child를 관리해줬으면 좋겠음 -> 이때 쓰는 것을 cascade라고 함  */
+
+             em.flush();
+             em.clear();
+
+             Parent findParent = em.find(Parent.class, parent.getId());
+             findParent.getChildList().remove(0); // 자식 자도으로 삭제(orphanRemoval)
 
              tx.commit();
              // DB저장 (flush, commit) => 버퍼링이라는 이점

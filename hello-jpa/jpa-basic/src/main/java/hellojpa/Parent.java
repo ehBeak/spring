@@ -12,7 +12,7 @@ public class Parent {
 
     private String name;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL) //em.persist(parent)만해도 child가 자동으로 persist된다.
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval: Parent의 childList에서 빠진 애는 자동으로 삭제가 된다..
     private List<Child> childList = new ArrayList<>(); // 어노테이션 밑에 있는 것을..
 
     // 연관관계 편의 메소드
@@ -20,6 +20,15 @@ public class Parent {
         childList.add(child);
         child.setParent(this);
     }
+
+    public List<Child> getChildList() {
+        return childList;
+    }
+
+    public void setChildList(List<Child> childList) {
+        this.childList = childList;
+    }
+
     public Long getId() {
         return id;
     }
