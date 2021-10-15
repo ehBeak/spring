@@ -12,7 +12,8 @@ public class Parent {
 
     private String name;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval: Parent의 childList에서 빠진 애는 자동으로 삭제가 된다..
+    // CascadType.ALL + orphanRemoval = true : 부모 엔티티를 통해서 자식 엔티티의 생명주기를 관리가능
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> childList = new ArrayList<>(); // 어노테이션 밑에 있는 것을..
 
     // 연관관계 편의 메소드
