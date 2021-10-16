@@ -8,7 +8,6 @@ import java.util.*;
 
 import static java.util.Optional.*;
 
-@Repository
 public class MemoryMemberRepository implements MemberRepository {
 
     /* !메모리 저장소 */
