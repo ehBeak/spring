@@ -2,11 +2,13 @@ package com.example.springreview.repository;
 
 import com.example.springreview.domain.Member;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 import static java.util.Optional.*;
 
+@Repository
 public class MemoryMemberRepository implements MemberRepository {
 
     /* !메모리 저장소 */

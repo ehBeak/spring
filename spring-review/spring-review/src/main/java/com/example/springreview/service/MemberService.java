@@ -7,11 +7,16 @@ import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
-public class Service {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-    private MemoryMemberRepository memberRepository = new MemoryMemberRepository();
+@Service
+public class MemberService {
 
-    public Service(MemoryMemberRepository memberRepository) {
+    private final MemoryMemberRepository memberRepository;
+
+    @Autowired
+    public MemberService(MemoryMemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
