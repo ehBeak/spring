@@ -1,6 +1,7 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +32,40 @@ public class Member extends BaseEntity { //
     // 다대다 -> 일대다 + 일대다
     @OneToMany(mappedBy = "Member")
     private List<MemberProduct> memberProducts = new ArrayList<>();
+
+
+    /*
+    // 기간 Period
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;*/
+
+    @Embedded // embeded 타입
+    private Period period;
+
+    // 주소
+    /*private String city;
+    private String zipcode;
+    private String street;
+    */
+
+    @Embedded // embeded 타입
+    private Address homeAddress;
+
+    public Period getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Period period) {
+        this.period = period;
+    }
+
+    public Address getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
+    }
 
     public Long getId() {
         return id;
