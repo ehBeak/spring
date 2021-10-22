@@ -10,7 +10,7 @@ public class Address {
     private String street;
 
     // Address라는 값타입은 Member라는 Entity를 가질 수 있다.
-    private Member member;
+    //private Member member;
 
     public Address() {
     }

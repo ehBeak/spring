@@ -51,6 +51,16 @@ public class Member extends BaseEntity { //
     @Embedded // embeded 타입
     private Address homeAddress;
 
+    // 중복 일어날 때는 AttributeOverrides
+    // {}안에 @AttributeOverride(name = "기존 변수명", column = @Column(name = "중복을 피하기 위한 변수명=> 테이블에 반영되는.."))
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "WORK_CITY")),
+            @AttributeOverride(name = "street", column = @Column(name = "WORK_EMP")),
+            @AttributeOverride(name = "zipcode", column = @Column(name = "WORK_END"))
+    })
+    private Address workAddress;
+
     public Period getPeriod() {
         return period;
     }
