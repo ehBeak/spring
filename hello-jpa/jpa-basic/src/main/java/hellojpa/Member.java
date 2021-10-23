@@ -2,9 +2,7 @@ package hellojpa;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Member extends BaseEntity { //
@@ -60,6 +58,47 @@ public class Member extends BaseEntity { //
             @AttributeOverride(name = "zipcode", column = @Column(name = "WORK_END"))
     })
     private Address workAddress;
+
+    /* 값 타입 컬렉션 :  값 타입을 하나 이상 저장할 때 */
+
+    // 1. String과 같이 기본 값 타입일 때
+    @ElementCollection
+    @CollectionTable(name = "FAVORITE_FOODS",
+            joinColumns = @JoinColumn(name = "MEMBER_ID") // address 테이블에서 fk에 해당, 연결될 컬럼
+    )
+    @Column(name = "FOOD_NAME") // 자바에서 제공하는 타입이기 때문에 예외적으로 컬럼이름 지정
+    private Set<String> favoriteFoods = new HashSet<>();
+
+    // 2. 임베디드 타입일 때
+    @ElementCollection
+    @CollectionTable(name = "ADDRESS",
+            joinColumns = @JoinColumn(name = "MEMBER_ID")
+    )
+    private List<Address> addressHistory = new ArrayList<>();
+
+    public Address getWorkAddress() {
+        return workAddress;
+    }
+
+    public void setWorkAddress(Address workAddress) {
+        this.workAddress = workAddress;
+    }
+
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<Address> getAddressHistory() {
+        return addressHistory;
+    }
+
+    public void setAddressHistory(List<Address> addressHistory) {
+        this.addressHistory = addressHistory;
+    }
 
     public Period getPeriod() {
         return period;
