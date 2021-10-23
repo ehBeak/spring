@@ -16,15 +16,13 @@ public class jpaMain {
          tx.begin();
 
          try {
-             // embeded type
-             Member member = new Member();
-             member.setUsername("hello");
-             member.setHomeAddress(new Address("city", "street", "zipcode"));
-             member.setPeriod(new Period());
+             // 값 타입 비교
+             // 동일성의 비교 : 값 자체는 같지만 참조값이 다르기 때문에 a != b
+             Address a = new Address("city","zipcode", "street");
+             Address b = new Address("city","zipcode", "street");
 
-             // member.getHomeAddress().setCity("newCity"); XXX -> 불변객체로 만들어서 못하게 해야함.
-
-             em.persist(member);
+             // 동등성의 비교 : isEqual() : default가 ==으로 되어있기 때문에 오버라이딩
+             a.equals(b); // ture
 
              tx.commit();
              // DB저장 (flush, commit) => 버퍼링이라는 이점
