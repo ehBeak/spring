@@ -22,6 +22,8 @@ public class jpaMain {
              member.setHomeAddress(new Address("city", "street", "zipcode"));
              member.setPeriod(new Period());
 
+             // member.getHomeAddress().setCity("newCity"); XXX -> 불변객체로 만들어서 못하게 해야함.
+
              em.persist(member);
 
              tx.commit();

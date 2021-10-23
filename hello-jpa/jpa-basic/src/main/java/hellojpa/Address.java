@@ -15,6 +15,8 @@ public class Address {
     public Address() {
     }
 
+    // Address를 불변객체로 만들기 위해 생성자에 값을 설정하고 set함수는 지운다.
+    // 불변 객체를 사용하지 않으면 entity끼리 값을 공유할 수도 있는 문재 생김
     public Address(String city, String zipcode, String street) {
         this.city = city;
         this.zipcode = zipcode;
@@ -25,23 +27,23 @@ public class Address {
         return city;
     }
 
-    public void setCity(String city) {
+    /*public void setCity(String city) {
         this.city = city;
-    }
+    }*/
 
     public String getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(String zipcode) {
+    /*public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
-    }
+    }*/
 
     public String getStreet() {
         return street;
     }
 
-    public void setStreet(String street) {
+    /*public void setStreet(String street) {
         this.street = street;
-    }
+    }*/
 }
