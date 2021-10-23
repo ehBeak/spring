@@ -60,6 +60,8 @@ public class jpaMain {
              // : equals hashcode가 그래서 중요!!
              member.getAddressHistory().add(new Address("old1","zipcode","street"));
 
+
+
              tx.commit();
              // DB저장 (flush, commit) => 버퍼링이라는 이점
 

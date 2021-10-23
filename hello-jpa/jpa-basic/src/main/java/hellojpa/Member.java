@@ -76,6 +76,10 @@ public class Member extends BaseEntity { //
     )
     private List<Address> addressHistory = new ArrayList<>();
 
+    /* 값 타입 컬렉션 대체 */
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) // 라이프 사이클 맞추려고, MemberToAddress
+    @JoinColumn(name = "MEMBER_ID") //
+    private List<AddressEntity> addressEntities = new ArrayList<>();
     public Address getWorkAddress() {
         return workAddress;
     }
