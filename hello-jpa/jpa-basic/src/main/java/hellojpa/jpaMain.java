@@ -1,6 +1,9 @@
 package hellojpa;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -17,54 +20,35 @@ public class jpaMain {
          tx.begin();
 
          try {
-             /* 값타입 컬렉션 저장 */
-             Member member = new Member();
-             member.setUsername("hello");
-             member.setHomeAddress(new Address("homeCity", "zipcode","street"));
+             // jpql -> 동적 쿼리 힘들다
+             String qlString = "select m from Member m like %hello%";
+             List<Member> result = em.createQuery(qlString, Member.class).
+                     getResultList();
+             // criteria -> 동적쿼리 : 쿼리를 코드로 짠다.
+             // 사전 준비
+             CriteriaBuilder cb = em.getCriteriaBuilder();
+             CriteriaQuery<Member> qurey = cb.createQuery(Member.class);
 
-             // 값타입 컬렉션 저장(Set<String>)
-             member.getFavoriteFoods().add("등촌 샤브샤브 매운버섯탕");
-             member.getFavoriteFoods().add("맘스터치 어니언치즈 감튀");
-             member.getFavoriteFoods().add("치즈토핑 추가한 임실 고르곤졸라 피자");
+             // 루트 클래스 : 조회를 시작할 클래스
+             Root<Member> m = qurey.from(Member.class);
 
-             // 값 타입 컬렉션 저장(List<Address>)
-             member.getAddressHistory().add(new Address("old1","zipcode","street"));
-             member.getAddressHistory().add(new Address("old2","zipcode","street"));
-
-             em.persist(member); // 값타입 컬렉션 또한 값타입이기 때문에 생명주기 같이함(자동으로 persist)
-
-             // 조회
-             em.flush();
-             em.clear();
-
-             Member findMember = em.find(Member.class, member.getId()); // 지연로딩이라 컬렉션 관련 테이블 안가져옴
-
-             // 컬렉션 관련 테이블 select 하는 시기 : 값을 건들일 때
-             Set<String> findFoods = findMember.getFavoriteFoods();
-             for(String food : findFoods){
-                 System.out.println(food);
-             }
-
-             // 수정
-
-             // 1. 값 타입
-             //member.getHomeAddress().setCity("A"); : 안돼!!
-             member.setHomeAddress(new Address("A","b","c"));
-
-             // 2. 값 타입 컬렉션 Set<String> : 등촌 -> 푸딩
-             member.getFavoriteFoods().remove("등촌 샤브샤브 매운버섯탕");
-             member.getFavoriteFoods().add("푸딩");
-
-             // 3 값 타입 컬렉션 List<Address> : old1 -> new1 : 통으로 지워짐. 그리고 새로 채움 -> 문제!
-             member.getAddressHistory().remove(new Address("old1","zipcode","street")); // equals로 적용
-             // : equals hashcode가 그래서 중요!!
-             member.getAddressHistory().add(new Address("old1","zipcode","street"));
+             // 동적으로 쿼리를 만든다.
+             CriteriaQuery<Member> cq = qurey.select(m).where(cb.equal(m.get("username"), "kim"));
+             List<Member> resultList = em.createQuery(cq).getResultList();
 
 
+             // querydsl : criteria대안
 
              tx.commit();
-             // DB저장 (flush, commit) => 버퍼링이라는 이점
+             // DB저장 (flush, commit) => 버퍼링이라는 이점 : 라이브러리
 
+             // 네이티브 sql
+             String sql = "SELECT ID, AGE, TEAM_ID, NAME FROM MEMBER WHERE NAME = ‘kim’";
+             List<Member> resultList1 = em.createNativeQuery(sql, Member.class).getResultList();
+
+
+             //또는 jdbcTemplate, jdbc직접 사용
+             
          } catch (Exception e) {
              tx.rollback(); // 롤백
              e.printStackTrace();
