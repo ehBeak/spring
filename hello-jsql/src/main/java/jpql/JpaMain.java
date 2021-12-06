@@ -14,50 +14,67 @@ public class JpaMain {
 
         try {
 
-            Member member3 = new Member();
-            member3.setUsername("member1");
-            member3.setAge(10);
-            em.persist(member3);
-
             Member member = new Member();
-            member.setUsername("member2");
+            member.setUsername("member1");
             member.setAge(10);
             em.persist(member);
 
-            // TypeQuery : 반환 타입이 명확할 때 사용
-            TypedQuery<Member> query = em.createQuery("select m from Member m", Member.class);
-            TypedQuery<String> query1 = em.createQuery("select m.username from Member m", String.class);
 
-            // Query : 반환 타입이 명확하지 않을 때 사용
-            Query query2 = em.createQuery("select m.username, m.age from Member m");
-
-            // 결과 조회 API
-
-            // 1. 값이 여러개일때
-            List<Member> resultList = query.getResultList();
-
-            for(Member member1 : resultList) {
-                System.out.println(member1);
-            }
-
-            // 2. 값이 무조건 하나일때(진짜 결과가 하나일 때만 사용해야함)
-            /*Member result2 = query.getSingleResult();
-            System.out.println(result2);*/
-
-            // 2-1 예외)값이 하나 이상일 때 : 리스트 반환, javax.persistence.NonUniqueResultException
-            // 2-2 예외)값이 아예 없을 때 : 빈리스트 반환, javax.persistence.NoResultException
-
-            // 파라미터 바인딩
-            Member result = em.createQuery("select m from Member m where m.username = :username", Member.class)
-                    .setParameter("username", "member1")
-                    .getSingleResult();
-
-            System.out.println("result = " + result.getUsername());
-
-            /*TypedQuery<Member> query3 = em.createQuery("select m from Member m where m.username = :username", Member.class);
-            query3.setParameter("username", "member1");
-            System.out.println(query3.getSingleResult().getUsername());*/
             em.flush();
+            em.clear();
+
+            /* 엔티티 프로젝션 */
+            // 엔티티 프로젝션을 하면 그 결과값이 영속성 컨텍스트에서 다 관리가 된다.
+            // 때문에 그 결과값을 set으로 update하면 DB에 값이 다 반영되는 것임임
+            List<Member> result = em.createQuery("select m from Member m", Member.class)
+                    .getResultList();
+
+            Member findMember = result.get(0);
+            findMember.setAge(20); // query 날라감
+
+            // join query 날라감(묵시적 조인)
+            List<Team> findTeam = em.createQuery("select m from Member m", Team.class)
+                    .getResultList();
+
+            // sql 쿼리랑 최대한 같게 jpql을 사용하기(명시적 조인)
+            List<Team> findTeam2 = em.createQuery("select t from Member m join m.team t", Team.class)
+                    .getResultList();
+
+
+            /* 임베디드 타입 프로젝션
+            *  -> "select address from Address o" 이렇게는 할 수가 없음 */
+            List<Address> findAddress = em.createQuery("select o.address from Order o", Address.class)
+                    .getResultList();
+
+            /* 스칼라 타입 프로젝션 */
+            // 필드값 그냥 가져오는 것임
+            em.createQuery("select distinct m.username, m.age from Member m").getResultList();
+
+            // 쿼리의 결과가 타입이 두 개인데 어떻게 해결하지?
+            // 방법1. List로 받아서 타입 캐스팅을 한다.
+            List resultList = em.createQuery("select distinct m.username, m.age from Member m").getResultList();
+
+            Object o = resultList.get(0);
+            Object[] result2 = (Object[]) o;
+
+            System.out.println("result = " + result2[0]); // username
+            System.out.println("result = " + result2[1]); // age
+
+            // 방법2. 이 과정에서 TypeQuery사용하기
+            List<Object[]> resultList1 = em.createQuery("select distinct m.username, m.age from Member m").getResultList();
+            Object[] result3 = resultList1.get(0);
+
+            System.out.println("result = " + result3[0]); // username
+            System.out.println("result = " + result3[1]); // age
+
+            // 방법3. new 명령어로 조회
+            List<MemberDTO> resultList2 = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class).getResultList();
+
+            MemberDTO memberDTO = resultList2.get(0);
+            System.out.println("result = " + memberDTO.getUsername()); // username
+            System.out.println("result = " + memberDTO.getAge()); // age
+
+
 
             tx.commit();
 
