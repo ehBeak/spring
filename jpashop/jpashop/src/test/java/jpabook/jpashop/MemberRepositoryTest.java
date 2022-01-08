@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class MemberRepositoryTest {
-
+/*
     @Autowired MemberRepository memberRepository;
 
     @Test
@@ -35,5 +35,5 @@ class MemberRepositoryTest {
         Assertions.assertThat(findMember).isEqualTo(member);
 
         System.out.println("findMember == member : " + (findMember == member));
-    }
+    }*/
 }
