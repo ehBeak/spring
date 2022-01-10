@@ -57,7 +57,7 @@ public class OrderService {
 
     // 검색
     public List<Order> findOrders(OrderSearch orderSearch) {
-        return null;
+        return orderRepository.findAllByCriteria(orderSearch);
     }
 
 }

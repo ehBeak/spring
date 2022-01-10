@@ -39,6 +39,7 @@ public class OrderRepository {
                 .getResultList();
     }
 
+
     public List<Order> findAllByCriteria(OrderSearch orderSearch) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Order> cq = cb.createQuery(Order.class);
