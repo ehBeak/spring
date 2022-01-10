@@ -37,3 +37,6 @@ out/
 .vscode/
 application.yml
 application.yml
+
+src/main/resources/static/css
+src/main/resources/static/js
