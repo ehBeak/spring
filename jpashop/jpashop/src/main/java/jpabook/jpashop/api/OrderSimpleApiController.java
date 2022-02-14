@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 /*
  * xToOne
  * Order
@@ -44,9 +46,18 @@ public class OrderSimpleApiController {
         List<Order> all = orderRepository.findAllByCriteria(new OrderSearch());
         List<SimpleOrderDto> collect = all.stream()
                 .map(order -> new SimpleOrderDto(order))
-                .collect(Collectors.toList());
+                .collect(toList());
         return new Result(collect);
     }
+
+
+    @GetMapping("/api/v3/simple-orders")
+    public Result orderV3() {
+        return new Result(orderRepository.findAllWithMemberDelivery().stream()
+                .map(SimpleOrderDto::new)
+                .collect(toList()));
+    }
+
 
     @Data
     @AllArgsConstructor
