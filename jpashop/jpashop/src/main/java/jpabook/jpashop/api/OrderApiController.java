@@ -10,6 +10,7 @@ import jpabook.jpashop.repository.order.query.OrderFlatDto;
 import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
+import jpabook.jpashop.service.query.OrderQueryService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,12 @@ public class OrderApiController {
 
     @GetMapping("/api/v2/orders")
     public List<OrderDto> orderV2() {
+        /*
+        // Proxy 초기화 -> open-in-view: false -> Error
+        // -> 트랜젝션 내에서 처리, 또는 페치 조인 사용
+        OrderQueryService orderQueryService = new OrderQueryService(orderRepository);
+        orderQueryService.orderV2();
+        */
         List<Order> all = orderRepository.findAllByCriteria(new OrderSearch());
         List<OrderDto> collect = all.stream()
                 .map(order -> new OrderDto(order))
