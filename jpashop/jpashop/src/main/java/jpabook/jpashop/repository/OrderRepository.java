@@ -28,7 +28,7 @@ public class OrderRepository {
     }
 
     // 검색 기능
-    public List<Order> findAll(OrderSearch orderSearch) {
+    /*public List<Order> findAll(OrderSearch orderSearch) {
         
         return em.createQuery("select o from Order o join o.member m" +
                 " where o.status = :status " +
@@ -37,7 +37,7 @@ public class OrderRepository {
                 .setParameter("name", orderSearch.getMemberName())
                 .setMaxResults(1000)
                 .getResultList();
-    }
+    }*/
 
 
     public List<Order> findAllByCriteria(OrderSearch orderSearch) {
