@@ -18,16 +18,7 @@ public class JpaMain {
 
         try {
             //== Transaction start==//
-            Member member = new Member();
-            member.setId(1L);
-            member.setName("HelloA");
-            em.persist(member);
 
-            Member findMember = em.find(Member.class, 1L);
-
-            findMember.setName("HelloJPA");
-
-            em.remove(findMember);
 
             //== Transaction end ==//
             tx.commit();
