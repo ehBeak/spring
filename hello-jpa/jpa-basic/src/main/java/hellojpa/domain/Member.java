@@ -1,31 +1,24 @@
 package hellojpa.domain;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@SequenceGenerator(name = "my_sequence_value", sequenceName = "member_sequence", initialValue = 1, allocationSize = 50)
+@Table(name = "MEMBER")
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "my_sequence_value")
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "MEMBER_ID")
     private Long id;
 
-    @Column(name = "name")
-    private String username;
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
 
-    private int age;
-
-    @Enumerated(EnumType.STRING)
-    private RoleType type;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
-
-    @Lob
-    private String description;
+    private String name;
+    private String city;
+    private String street;
+    private String zipcode;
 
     public Member() {
     }
@@ -38,51 +31,43 @@ public class Member {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
-    public Integer getAge() {
-        return age;
+    public String getName() {
+        return name;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public RoleType getType() {
-        return type;
+    public String getCity() {
+        return city;
     }
 
-    public void setType(RoleType type) {
-        this.type = type;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public String getStreet() {
+        return street;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
+    public String getZipcode() {
+        return zipcode;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 }
