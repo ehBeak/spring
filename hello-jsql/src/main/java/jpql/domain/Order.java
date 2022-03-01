@@ -1,27 +1,29 @@
-package jpql;
+package jpql.domain;
 
 import javax.persistence.*;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "ORDERS")
 public class Order {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
+    @Column(name = "ORDER_ID")
     private Long id;
 
-    @Column(name = "ORDERAMOUNT")
-    private int orderAmount;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product product;
 
     @Embedded
     private Address address;
 
-    @ManyToOne
-    @JoinColumn(name = "ORDER_ID")
-    private Member member;
-
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
-    private Product product;
+    private int orderAmount;
 
     public Long getId() {
         return id;
@@ -29,14 +31,6 @@ public class Order {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public int getOrderAmount() {
-        return orderAmount;
-    }
-
-    public void setOrderAmount(int orderAmount) {
-        this.orderAmount = orderAmount;
     }
 
     public Member getMember() {
@@ -53,5 +47,21 @@ public class Order {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public int getOrderAmount() {
+        return orderAmount;
+    }
+
+    public void setOrderAmount(int orderAmount) {
+        this.orderAmount = orderAmount;
     }
 }

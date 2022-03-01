@@ -1,21 +1,16 @@
-package jpql;
+package jpql.domain;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "PRODUCT")
 public class Product {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
+    @Column(name = "PRODUCT_ID")
     private Long id;
 
-    @Column(name = "NAME")
     private String name;
-
-    @Column(name = "PRICE")
     private int price;
-
-    @Column(name = "STOCKAMOUNT")
     private int stockAmount;
 
     public Long getId() {

@@ -1,29 +1,28 @@
-package jpql;
+package jpql.domain;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
-@Table(name = "MEMBER")
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
+    @Column(name = "MEMBER_ID")
     private Long id;
 
-    @Column(name = "NAME")
-    private String username;
-
-    @Column(name = "AGE")
-    private int age;
-
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
+    private String username;
+    private int age;
 
     public Long getId() {
         return id;
@@ -31,22 +30,6 @@ public class Member {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public Team getTeam() {
@@ -63,5 +46,21 @@ public class Member {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }

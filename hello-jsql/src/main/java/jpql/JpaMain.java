@@ -1,10 +1,11 @@
 package jpql;
 
+import jpql.domain.Member;
+
 import javax.persistence.*;
 import java.util.List;
 
 public class JpaMain {
-
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
         EntityManager em = emf.createEntityManager();
@@ -14,34 +15,39 @@ public class JpaMain {
 
         try {
 
-            for (int i=0; i<100; i++) {
-                Member member = new Member();
-                member.setUsername("member" + i);
-                member.setAge(i);
-                em.persist(member);
-            }
+            Member member = new Member();
 
-            em.flush();
-            em.clear();
+            // TypeQuery: 반환 타입이 명확
+            TypedQuery<Member> query1 = em.createQuery("select m from Member m", Member.class);
+            TypedQuery<String> query2 = em.createQuery("select m.username from Member m", String.class);
 
-            /* 페이징 */
-            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class) // desc
-                    .setFirstResult(1) // 첫번째 튜플부터
-                    .setMaxResults(10) // 열번째 튜플까지
-                    .getResultList(); // 값 가져오기
-            for (Member member1 : result) {
-                System.out.println(member1.getUsername());
-            }
+            // Query: 반환 타입이 명확하지 않을 때
+            Query query3 = em.createQuery("select m.username, m.age from Member m");
+
+            // 결과 반환 - 컬렉션 조회 (결과가 없으면 빈 리스트 반환)
+            List<Member> MemberList = query1.getResultList();
+
+            // 결과 반환 - 딱 하나 조회 (결과가 없으면 NotResultException, 결과가 둘 이상이면 NoUniqueResultException 예외발생)
+            Member member1 = query1.getSingleResult();
+
+            // 파라미터 바인딩 - 이름 기준
+            Member binding_name = em.createQuery("select m from Member m where m.username = :username", Member.class)
+                    .setParameter("username", member1)
+                    .getSingleResult();
+
+            // 파라미터 바인딩 - 위치 기준 (권장X)
+            Member binding_pos = em.createQuery("select m from Member m where m.username = ?1", Member.class)
+                    .setParameter(1, member1)
+                    .getSingleResult();
+
 
             tx.commit();
-
-        } catch (Exception e) {
+        } catch (Exception e){
             tx.rollback();
             e.printStackTrace();
         } finally {
             em.close();
         }
+        emf.close();
     }
-
-
 }
