@@ -27,6 +27,11 @@ public class Member {
     private String username;
     private int age;
 
+    //==연관관계 편의메서드==//
+    public void changeTeam(Team team) {
+        team.getMembers().add(this);
+        setTeam(team);
+    }
     public Long getId() {
         return id;
     }

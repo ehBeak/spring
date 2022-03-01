@@ -18,26 +18,37 @@ public class JpaMain {
 
         try {
 
-            for (int i = 0; i < 100; i++) {
-                Member member = new Member();
-                member.setUsername("member" + i);
-                member.setAge(i);
-                em.persist(member);
-            }
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setAge(10);
+            member.changeTeam(team);
+            em.persist(member);
 
             em.flush();
             em.clear();
 
-            // 페이징 쿼리
-            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
-                    .setFirstResult(1)
-                    .setMaxResults(10)
+            // 내부 조인
+            List<Member> resultList1 = em.createQuery("select m from Member m inner join m.team t", Member.class)
+                    .getResultList();
+            // 외부 조인
+            List<Member> resultList2 = em.createQuery("select m from Member m left join m.team t", Member.class)
+                    .getResultList();
+            // 세타 조인
+            List<Member> resultList3 = em.createQuery("select m from Member m, Team t where m.username = t.name", Member.class)
                     .getResultList();
 
-            for (Member member : result) {
-                System.out.println("username = " + member.getUsername());
-                System.out.println("age = " + member.getAge());
-            }
+            // ON절 - 조인 대상 필터링: on 조인할 때 조건
+            List<Member> resultList4 = em.createQuery("select m from Member m left join m.team t on t.name = 'teamA'", Member.class)
+                    .getResultList();
+
+            // ON절 - 연관관계가 없는 엔티티의 외부 조인
+            List<Member> resultList5 = em.createQuery("select m from Member m left join Team t on m.username = t.name", Member.class)
+                    .getResultList();
+
             tx.commit();
         } catch (Exception e){
             tx.rollback();
