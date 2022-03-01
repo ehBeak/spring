@@ -1,6 +1,9 @@
 package jpql;
 
+import jpql.domain.Address;
 import jpql.domain.Member;
+import jpql.domain.Team;
+import jpql.dto.MemberDTO;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,29 +19,36 @@ public class JpaMain {
         try {
 
             Member member = new Member();
+            member.setUsername("member1");
+            member.setAge(10);
+            em.persist(member);
+            
+            // 프로젝션 대상 - 엔티티 타입(영속성 컨텍스트에 관리가 된다. - 프로젝션 엔티티)
+            List<Member> findMember = em.createQuery("select m from Member m", Member.class).getResultList();
+            List<Team> findTeam = em.createQuery("select m.team from Member m", Team.class).getResultList();
 
-            // TypeQuery: 반환 타입이 명확
-            TypedQuery<Member> query1 = em.createQuery("select m from Member m", Member.class);
-            TypedQuery<String> query2 = em.createQuery("select m.username from Member m", String.class);
+            // 프로젝션 대상 - 임베디드 타입 프로젝션(소속된 엔티티로 부터 시작해야한다.)
+            Address findAddress = em.createQuery("select m.address from Member m", Address.class).getSingleResult();
 
-            // Query: 반환 타입이 명확하지 않을 때
-            Query query3 = em.createQuery("select m.username, m.age from Member m");
+            // 프로젝션 대상 - 스칼라(기본) 타입
+            // 1. Query 타입으로 조회
+            List findScalar1 = em.createQuery("select distinct m.username, m.age from Member m").getResultList();
+            Object o = findScalar1.get(0);
+            Object[] result1 = (Object[]) o;
+            System.out.println("username = " + result1[0]);
+            System.out.println("age = " + result1[1]);
 
-            // 결과 반환 - 컬렉션 조회 (결과가 없으면 빈 리스트 반환)
-            List<Member> MemberList = query1.getResultList();
+            // 2. Object[] 타입으로 조회
+            List<Object[]> findScalar2 = em.createQuery("select distinct m.username, m.age from Member m").getResultList();
+            Object[] result2 = findScalar2.get(0);
+            System.out.println("username = " + result2[0]);
+            System.out.println("age = " + result2[1]);
 
-            // 결과 반환 - 딱 하나 조회 (결과가 없으면 NotResultException, 결과가 둘 이상이면 NoUniqueResultException 예외발생)
-            Member member1 = query1.getSingleResult();
-
-            // 파라미터 바인딩 - 이름 기준
-            Member binding_name = em.createQuery("select m from Member m where m.username = :username", Member.class)
-                    .setParameter("username", member1)
-                    .getSingleResult();
-
-            // 파라미터 바인딩 - 위치 기준 (권장X)
-            Member binding_pos = em.createQuery("select m from Member m where m.username = ?1", Member.class)
-                    .setParameter(1, member1)
-                    .getSingleResult();
+            // 3. new 명령어로 조회
+            List<MemberDTO> result3 = em.createQuery("select distinct new jpql.dto.MemberDTO(m.username, m.age) from Member m", MemberDTO.class).getResultList();
+            MemberDTO memberDTO = result3.get(0);
+            System.out.println("username = " + memberDTO.getUsername());
+            System.out.println("age = " + memberDTO.getAge());
 
 
             tx.commit();
