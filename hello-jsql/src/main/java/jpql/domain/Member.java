@@ -7,6 +7,7 @@ import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
+
 @Entity
 public class Member {
 
@@ -23,6 +24,9 @@ public class Member {
 
     @Embedded
     private Address address;
+
+    @Enumerated(EnumType.STRING)
+    private MemberType memberType;
 
     private String username;
     private int age;
@@ -78,5 +82,13 @@ public class Member {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public MemberType getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(MemberType memberType) {
+        this.memberType = memberType;
     }
 }
