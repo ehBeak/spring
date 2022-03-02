@@ -34,29 +34,32 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // 메인 쿼리와 서브 쿼리를 구분하자.
-            // 서브 쿼리 - where, having, select 절에서 사용 가능, from 절에서 서브쿼리 불가능: 조인으로 풀 수 있으면 해결
-            // where
-            em.createQuery("select m from Member m join Team t on m.username = t.name where exists (select avg(m1.age) from Member m1)");
-            // having
-            em.createQuery("select m from Member m join Team t on m.username = t.name having (select avg(m1.age) from Member m1)");
-            // select
-            em.createQuery("select (select avg(m1.age) from Member m1) from Member m join Team t on m.username = t.name");
+            // CASE 식 - 기본 CASE 식
+            em.createQuery(
+                    "select " +
+                            "case when m.age <= 10 then '학생요금' " +
+                                "when m.age <= 60 then '경로요금' " +
+                                "else '기본요금' " +
+                            "end " +
+                        "from Member m");
+            // CASE 식 - 단순 CASE 식
+            em.createQuery(
+                    "select " +
+                            "case m.username " +
+                                "when '팀A' then '인센티브110%' " +
+                                "when '팀B' then '인센티브120%' " +
+                                "else '인센티브105%' " +
+                            "end " +
+                      "from Member m");
+            // COALESCE
+            em.createQuery("select coalesce(m.username, '이름 없는 회원') from Member m");
+            // NULLIF
+            em.createQuery("select nullif(m.username, '관리자') from Member m");
 
-            // exists-존재하면 참 | ALL-모두 만족하면 참 | ANY,SOME-조건을 하나라도 만족하면 참 | IN-서브쿼리의 결과 중 하나라도 같은 것이 있으면 참
 
-            // JPQL 타입 표현
-            // 문자, 숫자, Boolean
-            em.createQuery("select TRUE, 'Hello', 10 from Member m");
-            // ENUM
-            em.createQuery("select m from Member m where m.memberType = jpql.domain.MemberType.ADMIN");
-            em.createQuery("select m from Member m where m.memberType = :userType")
-                    .setParameter("userType", "jpql.domain.MemberType");
-            // 엔티티 타입
-            em.createQuery("select i from Item i where type(i) = Book", Item.class); // DTYPE
-
-            // EXISTS, IN, AND, OR, NOT, BETWEEN, LIKE, IS NULL
-
+            // 사용자 정의 함수 호출
+            em.createQuery("select function('group_concat', m.username) from Member m");
+            
             tx.commit();
         } catch (Exception e){
             tx.rollback();
