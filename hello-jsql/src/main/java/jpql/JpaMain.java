@@ -32,16 +32,16 @@ public class JpaMain {
             member.setMemberType(MemberType.ADMIN);
             em.persist(member);
 
-            em.flush();
-            em.clear();
-
-            // Named 쿼리: 미리 이름을 정의해서 이름을 부여해두고 사용하는 JPQL, 동적 쿼리 불가
-            // 에플리 케이션 로딩 시점에 쿼리를 초기화, 재사용, 검증 가능
-            em.createNamedQuery("Member.findByUsername", Member.class)
-                            .setParameter("username", "member1")
-                            .getResultList();
+            // 벌크 연산
+            // FLUSH 자동 호출
+            em.createQuery("update Member m set m.username = m.team.name");
 
 
+            // 벌크 연산은 영속성 컨텍트를 무시하고 데이터베이스에 직접 쿼리 날림
+            // -> 벌크 연산을 먼저 실행
+            // -> 벌크 연산 수행 후 영속성 컨텍스트 초기화
+            em.createQuery("update Member m set m.username = 'member'");// 영속성 컨텍스트에 반영 안된다. DB만 반영
+            em.clear();// 영속성 컨텍스트 초기화
 
             tx.commit();
         } catch (Exception e){
