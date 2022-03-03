@@ -8,6 +8,7 @@ import jpql.domain.item.Item;
 import jpql.dto.MemberDTO;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 public class JpaMain {
@@ -34,32 +35,20 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // CASE 식 - 기본 CASE 식
-            em.createQuery(
-                    "select " +
-                            "case when m.age <= 10 then '학생요금' " +
-                                "when m.age <= 60 then '경로요금' " +
-                                "else '기본요금' " +
-                            "end " +
-                        "from Member m");
-            // CASE 식 - 단순 CASE 식
-            em.createQuery(
-                    "select " +
-                            "case m.username " +
-                                "when '팀A' then '인센티브110%' " +
-                                "when '팀B' then '인센티브120%' " +
-                                "else '인센티브105%' " +
-                            "end " +
-                      "from Member m");
-            // COALESCE
-            em.createQuery("select coalesce(m.username, '이름 없는 회원') from Member m");
-            // NULLIF
-            em.createQuery("select nullif(m.username, '관리자') from Member m");
+            // 경로 표현식: 묵시적 조인을 쓰지말고 명시적 조인(join 키워드를 직접 사용)을 쓰자.
 
+            // 상태필드: 단순히 값 저장(경로 탐색의 끝, 더이상 탐색이 안된다.)
+            em.createQuery("select m.username from Member m");
 
-            // 사용자 정의 함수 호출
-            em.createQuery("select function('group_concat', m.username) from Member m");
-            
+            // 연관 필드 - 단일 값 연관 필드: 대상이 엔티티(묵시적 내부 조인 발생, 탐색 가능)
+            em.createQuery("select m.team from Member m", Team.class);
+
+            // 연관 필드 - 컬렉션 값 연관 필드: 대상이 컬렉션(묵시적 내부 조인 발생, 탐색 불가)
+            em.createQuery("select t.members from Team t", Collection.class);
+
+            //==> 탐색 불가 해결: 명시적 조인 사용
+            em.createQuery("select m.username from Team t join t.members m", Collection.class);
+
             tx.commit();
         } catch (Exception e){
             tx.rollback();
