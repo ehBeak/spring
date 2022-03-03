@@ -35,27 +35,12 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // 엔티티 직접 사용 - 기본 키값: 둘 다 실행되는 SQL이 같다.
-            // SELECT COUNT(M.ID) AS CNT FROM MEMBER M;
-            em.createQuery("select count(m.id) from Member m");
-            em.createQuery("select  count (m) from Member m");
-
-            // SELECT M.* FROM MEMBER M WHERE M.ID=?
-            em.createQuery("select m from Member m where m = :member")
-                            .setParameter("member", member)
+            // Named 쿼리: 미리 이름을 정의해서 이름을 부여해두고 사용하는 JPQL, 동적 쿼리 불가
+            // 에플리 케이션 로딩 시점에 쿼리를 초기화, 재사용, 검증 가능
+            em.createNamedQuery("Member.findByUsername", Member.class)
+                            .setParameter("username", "member1")
                             .getResultList();
-            em.createQuery("select m from Member m where m.id = :memberId")
-                    .setParameter("memberId", member.getId())
-                    .getResultList();
 
-            // 엔티티 직접 사용 - 외래 키 값
-            // SELECT M.* FROM MEMBER M WHERE M.TEAM_ID=?
-            em.createQuery("select m from Member m where m.team = :team")
-                            .setParameter("team", team)
-                            .getResultList();
-            em.createQuery("select m from Member m where m.team.id = :teamID")
-                    .setParameter("teamID", team.getId())
-                    .getResultList();
 
 
             tx.commit();
