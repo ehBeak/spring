@@ -35,28 +35,28 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            /* 페치조인: 연관된 엔티티나 컬렉션을 SQL 한번에 조인하는 기능 */
+            // 엔티티 직접 사용 - 기본 키값: 둘 다 실행되는 SQL이 같다.
+            // SELECT COUNT(M.ID) AS CNT FROM MEMBER M;
+            em.createQuery("select count(m.id) from Member m");
+            em.createQuery("select  count (m) from Member m");
 
-            // 다대일 - 페치 조인
-            // SELECT M.*, T.* FROM Member M INNER JOIN TEAM T ON M.TEAM_ID=T.ID
-            em.createQuery("select m from Member m join fetch m.team");
+            // SELECT M.* FROM MEMBER M WHERE M.ID=?
+            em.createQuery("select m from Member m where m = :member")
+                            .setParameter("member", member)
+                            .getResultList();
+            em.createQuery("select m from Member m where m.id = :memberId")
+                    .setParameter("memberId", member.getId())
+                    .getResultList();
 
-            // 일대다 - 컬렉션 페치 조인
-            // SELECT T.*, M.* FROM TEAM T INNER JOIN MEMBER M ON T.ID=M.TEAM_ID WHERE T.NAME='팀A'
-            em.createQuery("select t from Team t join fetch t.members"); // team 입장에서 데이터 중복 발생
+            // 엔티티 직접 사용 - 외래 키 값
+            // SELECT M.* FROM MEMBER M WHERE M.TEAM_ID=?
+            em.createQuery("select m from Member m where m.team = :team")
+                            .setParameter("team", team)
+                            .getResultList();
+            em.createQuery("select m from Member m where m.team.id = :teamID")
+                    .setParameter("teamID", team.getId())
+                    .getResultList();
 
-            // distinct: DB -> 중복제거 실패, 어플리케이션 단계에서 제거
-            em.createQuery("select distinct t from Team t join fetch t.members");
-
-            // 페치 조인과 일반 조인의 차이: 페치 조인은 모두 1차 캐시에 올리지만 일반 조인은 1차 캐시에 select 절에 해당하는 객체만 1차캐시에 올림
-            // 즉시로딩과 지연로딩 둘 다 n+1문제가 발생한다. 해결 방법이 페치 조인
-
-            /* 페치 조인의 한계
-            *  1. 페치 조인 대상에는 별칭을 줄 수 없다.(가급적 사용하지 말자.)
-            *  2. 둘 이상의 컬레션은 페치 조인을 할 수 없다.
-            *  3. 컬렉션을 페치 조인하면 페이징 API를 사용할 수 없다. -> BatchSize
-            * */
-            
 
             tx.commit();
         } catch (Exception e){
