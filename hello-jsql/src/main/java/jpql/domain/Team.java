@@ -1,6 +1,7 @@
 package jpql.domain;
 
 import jpql.domain.Member;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Team {
     @Column(name = "TEAM_ID")
     private Long id;
 
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
 
