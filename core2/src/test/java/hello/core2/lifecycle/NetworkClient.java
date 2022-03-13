@@ -21,7 +21,7 @@ public class NetworkClient /*implements InitializingBean, DisposableBean*/ {
     public void connect() {
         System.out.println("url = " + url);
     }
-    
+
     public void call(String message) {
         System.out.println("call: " + url);
         System.out.println("message = " + message);
